@@ -4,6 +4,7 @@ import Home from './route/Home'
 import About from './route/About'
 import Post from './route/Post'
 import Project from './route/Project'
+import Recommend from './component/Recommend'
 //
 import 'antd/dist/antd.css'
 import styled from 'styled-components'
@@ -18,6 +19,25 @@ const Brand = styled.div`
 `
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      name: 'chin',
+      rec: 'REC01'
+    }
+    this.activeClick = this.activeClick.bind(this)
+  }
+  activeClick(text) {
+    alert(text)
+    this.setState({
+      rec: 'REC03'
+    })
+  }
+  componentDidMount() {
+    this.setState({
+      name: 'bodin'
+    })
+  }
   render() {
     return (
       <div className="my-app">
@@ -34,12 +54,18 @@ class App extends Component {
                   alt="Recommendation"
                 />
               </a>
-              <h4>Recommedation App</h4>
+              <h4>Recommedation App {this.state.name}</h4>
             </Brand>
             <div className="navbar-menu">
               <div className="navbar-end">
                 <a href="/" className="navbar-item">
                   Home
+                </a>
+                <a
+                  onClick={() => this.activeClick('hello')}
+                  className="navbar-item"
+                >
+                  click
                 </a>
                 <a href="/posts" className="navbar-item">
                   Posts
@@ -55,7 +81,8 @@ class App extends Component {
           </div>
         </nav>
         <div className="App container">
-          <Route exact path="/" component={Home} />
+          <Recommend record={this.state.rec} />
+          <Route exact path="/" component={Home} name={this.state.name} />
           <Route exact path="/about" component={About} />
           <Route exact path="/posts" component={Post} />
           <Route exact path="/projects" component={Project} />
