@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
+import { connect } from 'react-redux'
 import Home from './route/Home'
 import About from './route/About'
 import Post from './route/Post'
 import Project from './route/Project'
-import Recommend from './component/Recommend'
+import { fetchNameStatics, fetchLogoutStatis } from './store/global/Action'
 //
 import 'antd/dist/antd.css'
 import styled from 'styled-components'
@@ -17,28 +18,23 @@ const Brand = styled.div`
     margin-bottom: 0;
   }
 `
-
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      name: 'chin',
-      rec: 'REC01'
-    }
     this.activeClick = this.activeClick.bind(this)
+    this.logout = this.logout.bind(this)
   }
-  activeClick(text) {
-    alert(text)
-    this.setState({
-      rec: 'REC03'
-    })
+  activeClick(loginName) {
+    alert(`Hello, ${loginName}`)
+    this.props.initName({ name: loginName, status: 'member' })
   }
-  componentDidMount() {
-    this.setState({
-      name: 'bodin'
-    })
+  logout() {
+    alert(`Logout from recommend system`)
+    this.props.logout()
   }
+  componentDidMount() {}
   render() {
+    const { name, status } = this.props.statics
     return (
       <div className="my-app">
         <nav
@@ -54,18 +50,12 @@ class App extends Component {
                   alt="Recommendation"
                 />
               </a>
-              <h4>Recommedation App {this.state.name}</h4>
+              <h4>Recommedation App</h4>
             </Brand>
             <div className="navbar-menu">
               <div className="navbar-end">
                 <a href="/" className="navbar-item">
                   Home
-                </a>
-                <a
-                  onClick={() => this.activeClick('hello')}
-                  className="navbar-item"
-                >
-                  click
                 </a>
                 <a href="/posts" className="navbar-item">
                   Posts
@@ -76,13 +66,24 @@ class App extends Component {
                 <a href="/about" className="navbar-item">
                   About
                 </a>
+                {status == 'guest' ? (
+                  <a
+                    onClick={() => this.activeClick('Chinnatip')}
+                    className="navbar-item"
+                  >
+                    Login
+                  </a>
+                ) : (
+                  <a onClick={() => this.logout()} className="navbar-item">
+                    Chinnatip, you wanna logout ?
+                  </a>
+                )}
               </div>
             </div>
           </div>
         </nav>
         <div className="App container">
-          <Recommend record={this.state.rec} />
-          <Route exact path="/" component={Home} name={this.state.name} />
+          <Route exact path="/" component={Home} name={name} />
           <Route exact path="/about" component={About} />
           <Route exact path="/posts" component={Post} />
           <Route exact path="/projects" component={Project} />
@@ -92,4 +93,25 @@ class App extends Component {
   }
 }
 
-export default App
+function mapStateToProps(state) {
+  return {
+    statics: state.statics
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    initName: name => {
+      dispatch(fetchNameStatics(name))
+    },
+    logout: () => {
+      dispatch(fetchLogoutStatis())
+    }
+  }
+}
+
+// export default App
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)
