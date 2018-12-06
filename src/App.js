@@ -24,9 +24,14 @@ class App extends Component {
     this.activeClick = this.activeClick.bind(this)
     this.logout = this.logout.bind(this)
   }
-  activeClick(loginName) {
+  activeClick(loginName, track) {
     alert(`Hello, ${loginName}`)
-    this.props.initName({ name: loginName, status: 'member' })
+    this.props.initName({
+      name: loginName,
+      status: 'member',
+      track: track,
+      preference: 0
+    })
   }
   logout() {
     alert(`Logout from recommend system`)
@@ -68,7 +73,7 @@ class App extends Component {
                 </a>
                 {status == 'guest' ? (
                   <a
-                    onClick={() => this.activeClick('Chinnatip')}
+                    onClick={() => this.activeClick('Chinnatip', 'freelance')}
                     className="navbar-item"
                   >
                     Login

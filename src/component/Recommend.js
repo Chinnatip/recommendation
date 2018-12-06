@@ -1,53 +1,42 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
+import { lists } from '../static/RecoomList'
 import { Button } from 'antd'
-import { fetchNameStatics, fetchLogoutStatis } from '../store/global/Action'
+import { fetchPreferenceStatics } from '../store/global/Action'
+import TrackList from './TrackList'
+
+const selectList = (lists, track) => {
+  return lists[track]
+}
 
 class Recommend extends Component {
   constructor(props) {
     super(props)
-    this.activeClick = this.activeClick.bind(this)
-    this.logout = this.logout.bind(this)
+    this.activeChange = this.activeChange.bind(this)
   }
-  activeClick(loginName) {
-    alert(`Hello, ${loginName}`)
-    this.props.initName({ name: loginName, status: 'member' })
-  }
-  logout() {
-    alert(`Logout from recommend system`)
-    this.props.logout()
+  activeChange(change) {
+    this.props.preferenceUpdate(change)
   }
   render() {
-    const { name, status } = this.props.statics
-    if (status == `guest`) {
-      return (
-        <Fragment>
-          <h1>Hello, {name}</h1>
-          <h5>This is your first time to recommendation model, right ?</h5>
-          <div>
-            <Button
-              type="primary"
-              onClick={() => this.activeClick('Chinnatip')}
-            >
-              Login
-            </Button>
-          </div>
-        </Fragment>
-      )
-    } else {
-      return (
-        <Fragment>
-          <h1>Hi, {name}</h1>
-          <h5>Welcome again and nice to meet you</h5>
-          <div>
-            <Button>Recommend Me Some stuff</Button>
-            <Button type="danger" onClick={() => this.logout()}>
-              Logout
-            </Button>
-          </div>
-        </Fragment>
-      )
-    }
+    const { track, preference } = this.props.statics
+    const itemTrack = lists[track]
+    const active = preference !== 0 ? preference : itemTrack[0]
+    return (
+      <Fragment>
+        {itemTrack.map((item, index) => {
+          if (item == active) {
+            return <Button type="primary">{item}</Button>
+          } else {
+            return (
+              <Button type="dashed" onClick={() => this.activeChange(item)}>
+                {item}
+              </Button>
+            )
+          }
+        })}
+        <TrackList track={active} />
+      </Fragment>
+    )
   }
 }
 
@@ -56,18 +45,13 @@ function mapStateToProps(state) {
     statics: state.statics
   }
 }
-
 function mapDispatchToProps(dispatch) {
   return {
-    initName: name => {
-      dispatch(fetchNameStatics(name))
-    },
-    logout: () => {
-      dispatch(fetchLogoutStatis())
+    preferenceUpdate: item => {
+      dispatch(fetchPreferenceStatics(item))
     }
   }
 }
-
 // export default Recommend
 export default connect(
   mapStateToProps,
