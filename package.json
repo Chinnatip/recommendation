@@ -21,6 +21,8 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "prettier": "./node_modules/.bin/prettier --semi=false --single-quote=true --write src/*.js",
-    "fire-host": "npm run build; firebase deploy --only hosting"
+    "fire-host": "npm run build; firebase deploy --only hosting",
+    "fire-func": "firebase deploy --only functions",
+    "fire-serve": "npm --prefix functions run lint; npm --prefix functions run build; firebase serve --only functions"
   }
 }

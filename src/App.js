@@ -5,6 +5,7 @@ import Home from './route/Home'
 import About from './route/About'
 import Post from './route/Post'
 import Project from './route/Project'
+import NavButton from './component/NavButton'
 import { fetchNameStatics, fetchLogoutStatis } from './store/global/Action'
 //
 import 'antd/dist/antd.css'
@@ -59,9 +60,7 @@ class App extends Component {
             </Brand>
             <div className="navbar-menu">
               <div className="navbar-end">
-                <a href="/" className="navbar-item">
-                  Home
-                </a>
+                <NavButton title="HIM" link="/" />
                 <a href="/posts" className="navbar-item">
                   Posts
                 </a>
@@ -100,7 +99,8 @@ class App extends Component {
 
 function mapStateToProps(state) {
   return {
-    statics: state.statics
+    statics: state.statics,
+    name: state.statics.name
   }
 }
 
